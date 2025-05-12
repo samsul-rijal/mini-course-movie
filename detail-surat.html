@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <a href="surat.html">kembali</a>
+    <h2>Selamat Datang di detail surat</h2>
+
+    <div id="surat">
+        <h3>Title Surat</h3>
+        <p>Deskripsi surat</p>    
+    </div>
+
+    <div id="list-ayat">
+        <h1>loading .....</h1>
+    </div>
+
+
+    <script>
+
+        const url = new URLSearchParams(document.location.search);
+        const nomor = url.get("nomor")
+
+        async function getSurat(){
+
+            const response = await fetch(`https://equran.id/api/v2/surat/${nomor}`).then((res) => res.json())
+            const surat = response.data
+            console.log(surat);
+
+            document.getElementById("surat").innerHTML = 
+            `
+                <div id="surat">
+                    <h2>${surat.nama}</h2>
+                    <p>${surat.deskripsi}</p>    
+                </div>
+            `
+            
+            document.getElementById("list-ayat").innerHTML = ''
+            for(let item of surat.ayat){
+                document.getElementById("list-ayat").innerHTML += 
+                `
+                <div id="ayat">
+                    <p>Nomor Surat: ${item.nomorAyat}</p>
+                    <h1>${item.teksArab}</h1>
+                    <p>${item.teksIndonesia}</p>
+                </div>
+
+                `
+
+            }
+
+
+        }
+
+
+
+        getSurat()
+        
+
+    </script>
+    
+</body>
+</html>
